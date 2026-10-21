@@ -13,43 +13,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Extraer el ZIP
+      - name: Descomprimir la web
         run: |
-          if [ -f wolfstrgn-landings.zip ]; then
-            unzip -o wolfstrgn-landings.zip
-            shopt -s dotglob
-            mv wolfstrgn-landings/* .
-            rm -rf wolfstrgn-landings wolfstrgn-landings.zip
-            git config user.name "github-actions"
-            git config user.email "actions@github.com"
-            git add -A
-            git diff --cached --quiet || (git commit -m "Extraer web del ZIP" && git push)
-          fi
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Configurar export estatico
-        run: |
-          sed -i "s|const nextConfig: NextConfig = {|const nextConfig: NextConfig = {\n  output: \"export\",\n  images: { unoptimized: true },\n  basePath: \"/wolfstrgn-landings\",\n  assetPrefix: \"/wolfstrgn-landings\",|" next.config.ts
-
-      - name: Ajustar rutas de iconos
-        run: |
-          sed -i 's|"/images/|"/wolfstrgn-landings/images/|g' src/app/layout.tsx
-
-      - name: Instalar y construir
-        run: |
-          npm install
-          npm run build
-
-      - name: Preparar despliegue
-        run: touch out/.nojekyll
-
+          unzip -o wolfstrgn-web-final.zip -d out
+          touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
-
       - id: deployment
         uses: actions/deploy-pages@v4
