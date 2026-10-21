@@ -32,10 +32,12 @@ jobs:
           node-version: 22
 
       - name: Configurar export estatico
-        run: sed -i "s|const nextConfig: NextConfig = {|const nextConfig: NextConfig = {\n  output: \"export\",\n  images: { unoptimized: true },\n  basePath: \"/wolfstrgn-landings\",\n  assetPrefix: \"/wolfstrgn-landings\",|" next.config.ts
+        run: |
+          sed -i "s|const nextConfig: NextConfig = {|const nextConfig: NextConfig = {\n  output: \"export\",\n  images: { unoptimized: true },\n  basePath: \"/wolfstrgn-landings\",\n  assetPrefix: \"/wolfstrgn-landings\",|" next.config.ts
 
       - name: Ajustar rutas de iconos
-        run: sed -i 's|"/images/|"/wolfstrgn-landings/images/|g' src/app/layout.tsx
+        run: |
+          sed -i 's|"/images/|"/wolfstrgn-landings/images/|g' src/app/layout.tsx
 
       - name: Instalar y construir
         run: |
